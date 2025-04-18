@@ -14,11 +14,16 @@
             <h1>Gerenciador de Tarefas</h1>
             <p>Adicione e gerencie suas tarefas com lembretes</p>
             <button id="logoutBtn" class="logout-btn">Sair</button>
+            <button id="updateProfileBtn" class="update-btn">Atualizar Perfil</button>
         </header>
 
         <main>
             <section class="task-form">
                 <h2>Adicionar Nova Tarefa</h2>
+                <div class="user-info">
+                    <p>Usuário: <span id="currentUserName"></span></p>
+                    <p>Status: <span class="logged-in">Logado</span></p>
+                </div>
                 <form id="taskForm">
                     <div class="form-group">
                         <label for="taskTitle">Título:</label>
@@ -46,8 +51,7 @@
                         </div>
                     </div>
                     <button type="submit">Adicionar Tarefa</button>
-                    <button type="button" id="logoutBtn" style="margin-left: 10px;">Sair</button>
-                    <button type="button" onclick="updateUserProfile()" style="margin-left: 10px;">Atualizar Perfil</button>
+
                 </form>
             </section>
 
@@ -63,6 +67,7 @@
     <script src="../script/script.js"></script>
     <script>
         document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('updateProfileBtn').addEventListener('click', updateProfile);
     </script>
 </body>
 

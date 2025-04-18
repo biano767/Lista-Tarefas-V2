@@ -23,6 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Se estiver na página principal (index.html) e logado, carrega as tarefas
     if (isIndexPage && user) {
+        updateUserDisplay(); // Atualiza informações do usuário
         loadTasks(); // Carrega as tarefas iniciais
 
         // Configura verificação periódica de prazos apenas na página principal
@@ -36,8 +37,47 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Função para fazer logout
 function logout() {
-    localStorage.removeItem('currentUser');
-    window.location.href = '../src/login.html';
+    // Implementação da função de logout
+    alert('Logout realizado com sucesso!');
+    // Redirecionar para a página de login
+    window.location.href = 'login.html';
+}
+
+function updateProfile() {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (!user) return;
+
+    const newName = prompt('Novo nome:', user.name);
+    const newEmail = prompt('Novo e-mail:', user.email);
+    const newPhone = '+55' + prompt('Novo telefone (apenas números):', user.phone.replace('+55', '')).replace(/\D/g, '');
+
+    if (newName && newEmail && newPhone) {
+        // Obter todos os usuários
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Verificar se o novo email já existe (exceto para o usuário atual)
+        if (users.some(u => u.email === newEmail && u.email !== user.email)) {
+            alert('Este e-mail já está cadastrado por outro usuário!');
+            return;
+        }
+
+        // Atualizar dados do usuário
+        user.name = newName;
+        user.email = newEmail;
+        user.phone = newPhone;
+
+        // Atualizar currentUser no localStorage
+        localStorage.setItem('currentUser', JSON.stringify(user));
+
+        // Atualizar na lista de usuários
+        const userIndex = users.findIndex(u => u.email === user.email);
+        if (userIndex !== -1) {
+            users[userIndex] = user;
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        alert('Perfil atualizado com sucesso!');
+    }
 }
 
 function updateUserProfile() {
@@ -77,6 +117,16 @@ function updateUserProfile() {
     }
 }
 const USER_KEY = 'currentUser';
+
+// Função para atualizar a exibição do usuário
+function updateUserDisplay() {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const userNameElement = document.getElementById('currentUserName');
+
+    if (userNameElement && user) {
+        userNameElement.textContent = user.name;
+    }
+}
 
 // Alternar visibilidade da senha
 document.addEventListener('DOMContentLoaded', function () {
@@ -157,6 +207,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (user) {
                 // Salvar usuário atual no localStorage
                 localStorage.setItem('currentUser', JSON.stringify(user));
+                // Atualizar informações do usuário na tela
+                updateUserDisplay();
                 window.location.href = 'index.html';
             } else {
                 alert('E-mail ou senha incorretos. Por favor, tente novamente.');
